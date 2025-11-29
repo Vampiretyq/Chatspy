@@ -1,0 +1,25 @@
+local TextChatService = game:GetService("TextChatService")
+
+-- Espera o canal RBXGeneral carregar
+local generalChannel = TextChatService:WaitForChild("TextChannels"):WaitForChild("RBXGeneral")
+
+-- Mensagem de sistema (formatação HTML para cor e fonte)
+local message = "<font color='#FFD700' face='SourceSansBold'>⚠️made by zerfler</font>"
+
+-- Tenta exibir diretamente
+generalChannel:DisplaySystemMessage(message)
+
+-- Solução alternativa: Intercepta mensagens de sistema para garantir exibição (caso o direto falhe)
+local function onIncomingMessage(messageDescriptor)
+    local props = Instance.new("TextChatMessageProperties")
+    
+    -- Verifica se é uma mensagem de sistema (pode ter metadados ou prefixo)
+    if messageDescriptor.Text == message then
+        props.Text = message  -- Garante a formatação
+        -- Opcional: props.PrefixText = "[SYSTEM]" para destacar mais
+    end
+    
+    return props
+end
+
+TextChatService.OnIncomingMessage = onIncomingMessage
